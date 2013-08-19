@@ -2,10 +2,10 @@
 body { height: 100%; margin: 0 }
 form { height: 100%;display: -webkit-box; }
 
-.divCont {width: 100%;height: 100%; display: -ms-flexbox; -ms-flex-align: center; -ms-flex-pack: center;-ms-box-orient:horizontal;-ms-flex-direction: row; overflow: hidden}
-.bigDiv {width: 100%;height: 100%;display: -webkit-box; -webkit-transform: translateX(0px);-ms-transform: translateX(0px);-o-transform: translateX(0px); -moz-transform: translateX(0px);display: -ms-flexbox;}
+.divCont {height: 100%; display: -ms-flexbox; -ms-flex-align: center; -ms-flex-pack: center;-ms-box-orient:horizontal;-ms-flex-direction: row; overflow: hidden}
+.bigDiv {height: 100%;display: -webkit-box; -webkit-transform: translateX(0px);-ms-transform: translateX(0px);-o-transform: translateX(0px); -moz-transform: translateX(0px);display: -ms-flexbox;}
 .divTransition { -webkit-transition: -webkit-transform 1s linear; -webkit-transition: -webkit-transform 1s linear;-ms-transition: -ms-transform 1s linear;-o-transition: -o-transform 1s linear;-moz-transition: -moz-transform 1s linear;}
-.container { width: 100%;height: 100%;float: left;-webkit-transform: translate3d(0px, 0px, 0px);-webkit-transition: -webkit-transform 1s linear;-ms-transition: -ms-transform 1s linear;-o-transition: -o-transform 1s linear;-moz-transition: -moz-transform 1s linear;overflow: hidden;}
+.container { height: 100%;float: left;-webkit-transform: translate3d(0px, 0px, 0px);-webkit-transition: -webkit-transform 1s linear;-ms-transition: -ms-transform 1s linear;-o-transition: -o-transform 1s linear;-moz-transition: -moz-transform 1s linear;overflow: hidden;}
 .buttons { width: 200px;height: 30px;position: absolute;z-index: 1;top: 85%;left: 40%;}
 #nxtBttn { width: 80px;height: 30px;float: left;margin-left: 36px;cursor: pointer;background-color: white;border: 1px solid black;text-align: center;line-height: 29px;}
 #prvBttn { width: 80px;height: 30px;float: left;cursor: pointer;background-color: white;border: 1px solid black; text-align: center;line-height: 29px;}

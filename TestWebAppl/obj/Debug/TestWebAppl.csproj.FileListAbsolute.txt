@@ -1,9 +1,0 @@
-C:\Users\developer\documents\visual studio 2012\Projects\TestWebAppl\TestWebAppl\bin\TestWebAppl.dll
-C:\Users\developer\documents\visual studio 2012\Projects\TestWebAppl\TestWebAppl\bin\TestWebAppl.pdb
-C:\Users\developer\documents\visual studio 2012\Projects\TestWebAppl\TestWebAppl\obj\Debug\TestWebAppl.dll
-C:\Users\developer\documents\visual studio 2012\Projects\TestWebAppl\TestWebAppl\obj\Debug\TestWebAppl.pdb
-C:\1\TestTask3\TestWebAppl\bin\TestWebAppl.dll
-C:\1\TestTask3\TestWebAppl\bin\TestWebAppl.pdb
-C:\1\TestTask3\TestWebAppl\obj\Debug\TestWebAppl.csprojResolveAssemblyReference.cache
-C:\1\TestTask3\TestWebAppl\obj\Debug\TestWebAppl.dll
-C:\1\TestTask3\TestWebAppl\obj\Debug\TestWebAppl.pdb
