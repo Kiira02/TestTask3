@@ -1,10 +1,17 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
-    <script src="Template.js"></script>
-    <link href="Template.css" rel="stylesheet" />
-    <script type="text/javascript">
-        window.onload = function () {
+    <link href="Template.css" rel="stylesheet">
+    <script src="http://yui.yahooapis.com/3.12.0/build/yui/yui-min.js"></script>
+    <script>
+        YUI({
+            modules: {
+                'templates': {
+                    fullpath: 'Template.js',
+                    requires: ['node-base']
+                }
+            }
+        }).use('templates', function (Y) {
             var PAGES = {
                 firstPage: {
                     title: 'Pagetitle',
@@ -25,14 +32,14 @@
                 fivePage: {
                     title: 'Pagetitle5',
                     content: '<div><div><img src="http://vmonitor.ru/pic/nature/17412/Priroda-1920x1200.jpg"/></div></div>'
-                },
+                }
             };
-            Template(PAGES);
-        };
+            var node = Y.one('#demo');
+            Y.Templates.GetTemplate(PAGES, node);
+        });
     </script>
     <title></title>
 </head>
 <body>
-
 </body>
 </html>
