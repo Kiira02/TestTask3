@@ -1,202 +1,8 @@
-YUI.add('templates', function (Y) {
-    function Templates(item) {
-        var arr = [],
-            arrPagesNames = [],
-            schemsStr = window.location.hash.toString(),
-            clearShema = schemsStr.substring(1),
-            pageNumber = 0,
-            pagesTempl = item,
-            div = Y.one('#Pages'),
-            imageSRC = [];
+YUI.add('mywidget', function (Y, NAME) {
+    var Widget = Y.Widget;
 
-        for (var elem in pagesTempl) {
-            pagesTempl[elem].content = pagesTempl[elem].content.replace(/img src=/g, 'img waitSrc=');
-            arr.push(pagesTempl[elem]);
-            arrPagesNames.push(elem);
-        }
-
-        for (var isPresent in arrPagesNames) {
-            if (arrPagesNames[isPresent] == clearShema) {
-                pageNumber = parseInt(isPresent);
-            }
-        }
-
-        for (var arrItem in arr) {
-            var width = window.innerWidth;
-            div.set('innerHTML', div.get('innerHTML') + arr[arrItem].content);
-            div._node.childNodes[arrItem].setAttribute('id', "page_" + arrItem);
-            Y.one("#page_" + arrItem).addClass('container');
-            Y.one("#page_" + arrItem)._node.style.width = width + "px";
-            document.title = arr[arrItem].title;
-        }
-
-        var widthEl = window.innerWidth;
-        var divEl = Y.one('#Pages')._node;
-        var imagesEl = Y.all('IMG');
-
-        if (imagesEl._nodes.length > 0) {
-            setImgAttr(imagesEl._nodes);
-            loadOrderListOfImages(pageNumber, arr.length);
-        }
-
-        var transform;
-
-        divEl.style.width = widthEl * arr.length + "px";
-
-        var transformVersion = SetStyleProp();
-        widthEl = widthEl * pageNumber;
-        transform = 'translateX(-' + widthEl + 'px)';
-        divEl.style[transformVersion] = transform;
-        document.title = arr[pageNumber].title;
-        setTimeout(function () {
-            divEl.className = divEl.className + ' divTransition';
-        }, 50);
-
-        bindKeyAndClick(pageNumber, div._node, arr, arrPagesNames);
-        bindOnResize();
-    }
-
-    function bindKeyAndClick(pageNumber, div, arr, arrPagesNames) {
-        var arrIdx = pageNumber,
-            nextBttn = Y.one('#nxtBttn'),
-            prevBttn = Y.one('#prvBttn'),
-            widthEl = window.innerWidth,
-            transformVersion = SetStyleProp(),
-            transform;
-
-        nextBttn.on('click', function(ev) {
-            widthEl = window.innerWidth;
-            transform = 'translateX(-' + widthEl + 'px)';
-
-            arrIdx++;
-            if (arrIdx > arr.length - 1) arrIdx = 0;
-            if (arrIdx != 0) {
-                widthEl = widthEl * arrIdx;
-            } else {
-                widthEl = 0;
-            }
-            transform = 'translateX(-' + widthEl + 'px)';
-            div.style[transformVersion] = transform;
-            document.title = arr[arrIdx].title;
-            window.location.hash = arrPagesNames[arrIdx];
-        });
-
-        prevBttn.on('click', function (ev) {
-            widthEl = window.innerWidth;
-            transform = 'translateX(-' + widthEl + 'px)';
-
-            arrIdx--;
-            if (arrIdx < 0) arrIdx = arr.length - 1;
-            if (arrIdx != 0) {
-                widthEl = widthEl * arrIdx;
-            } else {
-                widthEl = 0;
-            }
-            transform = 'translateX(-' + widthEl + 'px)';
-            div.style[transformVersion] = transform;
-            document.title = arr[arrIdx].title;
-            window.location.hash = arrPagesNames[arrIdx];
-        });
-
-        window.onkeydown = function () {
-            widthEl = window.innerWidth;
-            transform = 'translateX(-' + widthEl + 'px)';
-            var eventForBrowser;
-
-            if (DetectBrowser() == "FireFox") {
-                eventForBrowser = arguments[0].keyCode; //Fix for FF;
-            } else {
-                eventForBrowser = window.event.keyCode;
-            }
-
-            switch (eventForBrowser) {
-                case 39:
-                    arrIdx++;
-                    if (arrIdx > arr.length - 1) arrIdx = 0;
-                    if (arrIdx != 0) {
-                        widthEl = widthEl * arrIdx;
-                    } else {
-                        widthEl = 0;
-                    }
-                    transform = 'translateX(-' + widthEl + 'px)';
-                    div.style[transformVersion] = transform;
-                    document.title = arr[arrIdx].title;
-                    window.location.hash = arrPagesNames[arrIdx];
-                    break;
-                case 37:
-                    arrIdx--;
-                    if (arrIdx < 0) arrIdx = arr.length - 1;
-                    if (arrIdx != 0) {
-                        widthEl = widthEl * arrIdx;
-                    } else {
-                        widthEl = 0;
-                    }
-                    transform = 'translateX(-' + widthEl + 'px)';
-                    div.style[transformVersion] = transform;
-                    document.title = arr[arrIdx].title;
-                    window.location.hash = arrPagesNames[arrIdx];
-                    break;
-            }
-        };
-    }
-
-    function setImgAttr(item) {
-        for (var i = 0; i < item.length; i++) {
-            var t = item[i].parentNode;
-            var isParent = false;
-            while (isParent == false) {
-                if (t.id.indexOf("page_") == 0) {
-                    isParent = true;
-                    item[i].setAttribute('relativeTo', t.id);
-                } else {
-                    t = t.parentNode;
-                }
-            }
-        }
-        return item;
-    }
-
-    function bindOnResize() {
-        window.onresize = function () {
-            var width = window.innerWidth + "px";
-            var elements = Y.all(".container")._nodes;
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].style.width = width;
-            }
-        };
-    }
-
-    function loadOrderListOfImages(currentPage, numberOfPages) {
-        var nextPage;
-        var orderList = [];
-        var image = Y.all('img[relativeTo=page_' + currentPage + ']')._nodes;
-        orderList.push(image);
-
-        for (var idx = 1; idx <= numberOfPages; idx++) {
-            if (currentPage - idx >= 0 && currentPage != currentPage - idx) {
-                nextPage = currentPage - idx;
-                image = Y.all('img[relativeTo=page_' + nextPage + ']');
-                if (image != null) orderList.push(image._nodes);
-                //leftpage
-            }
-
-            if (currentPage + idx <= numberOfPages && currentPage != currentPage + idx) {
-                nextPage = currentPage + idx;
-                image = Y.all('img[relativeTo=page_' + nextPage + ']');
-                if (image != null) orderList.push(image._nodes);
-                //rightpage
-            }
-        }
-
-        loadImage(orderList);
-    }
-
-    function CreateElements() {
-        Y.Node.create('<div/>').set('id', 'containerForTempl').appendTo(Y.one('body')).addClass('divCont');
-        Y.Node.create('<div/>').set('id', 'Pages').appendTo(Y.one('#containerForTempl')).addClass('bigDiv');
-        Y.Node.create('<div/>').set('id', 'containerForBttns').appendTo(Y.one('body')).addClass('buttons');
-        Y.Node.create('<div/>').set('id', 'prvBttn').set('innerHTML', 'PREV').appendTo(Y.one('#containerForBttns'));
-        Y.Node.create('<div/>').set('id', 'nxtBttn').set('innerHTML', 'NEXT').appendTo(Y.one('#containerForBttns'));
+    function MyWidget(config) {
+        MyWidget.superclass.constructor.apply(this, arguments);
     };
 
     function loadImage(image) {
@@ -205,43 +11,214 @@ YUI.add('templates', function (Y) {
                 image[0][0].src = image[0][0].getAttribute('waitSrc');
                 image[0][0].onload = function () { loadImage(image); };
                 image[0][0].removeAttribute('waitSrc');
+                image[0][0].removeAttribute('relativeTo');
                 image[0].splice(0, 1);
             } else {
                 image.splice(0, 1);
                 loadImage(image);
             }
         }
-    }
+    };
 
-    function SetStyleProp() {
-        var result = '';
-        switch (DetectBrowser()) {
-            case "Chrome":
-                result = 'webkitTransform';
-                break;
-            case "IE":
-                result = 'msTransform';
-                break;
-            case "FireFox":
-                result = 'MozTransform';
-                break;
-            case "Opera":
-                result = 'webkitTransform';
-                break;
+    MyWidget.NAME = "mywidget";
+    MyWidget.ATTRS = {
+        strings: {
+            value: {
+                tooltip: "Press the arrow left/right keys for navigate.",
+                prev: "prev",
+                next: "next"
+            }
+        },
+        template: {
+        },
+        sliderSpeed: {
+            value: 2
+        },
+        routes: {
+            value: [
+                { path: '/test', callback: '_test'}
+            ]
         }
-        return result;
-    }
+    };
 
-    function DetectBrowser() {
-        if (!!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0) return "Opera";
-        if (typeof InstallTrigger !== 'undefined') return "FireFox";
-        if (!!window.chrome && !(!!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0)) return "Chrome";
-        if (/*@cc_on!@*/false || document.documentMode) return "IE";
-        return 'Unknown';
-    }
+    MyWidget.BTN_TEMPLATE = '<button type="button"></button>';
+    MyWidget.CurrentStep = 0;
 
-    Y.namespace('Templates').GetTemplate = function (PAGES) {
-        CreateElements();
-        Templates(PAGES);
-    }
-}, '0.0.1', {requires: ['node-base']});
+    Y.extend(MyWidget, Widget, {
+        initializer: function() {
+            var obj = this.get('template'),
+                pagesNames = [],
+                pageNumb = -1;
+
+            for (var elem in obj) {
+                pageNumb++
+                obj[elem].content = obj[elem].content.replace(/img src=/g, 'img relativeTo=pg_' + pageNumb + ' waitSrc=');
+                pagesNames.push(elem);
+            }
+
+            MyWidget.NMB_PAGES = pageNumb;
+            MyWidget.NAME_PAGES = pagesNames;
+            MyWidget.SCHEMA = window.location.hash.toString().substring(1);
+
+            for (var i in MyWidget.NAME_PAGES) {
+                if (MyWidget.NAME_PAGES[i] == MyWidget.SCHEMA) {
+                    MyWidget.LOCATION = parseInt(i);
+                }
+            }
+
+            if(MyWidget.LOCATION === undefined) MyWidget.LOCATION = 0;
+        },
+        destructor : function() {
+        },
+        renderUI : function() {
+            this._renderTemplate();
+            this._renderImages();
+            this._renderButtons();
+        },
+        bindUI : function() {
+            var boundingBox = this.get("boundingBox");
+            var keyEventSpec = (!Y.UA.opera) ? "down:" : "press:";
+            keyEventSpec += "37, 39";
+            Y.on("key", Y.bind(this._onDirectionKey, this), window, keyEventSpec);
+            Y.on("mousedown", Y.bind(this._onMouseDown, this), Y.one('body'));
+        },
+        syncUI : function() {
+            //sync
+        },
+        _renderImages: function() {
+            var currentPage = MyWidget.LOCATION,
+                image = Y.all('img[relativeTo=pg_' + currentPage + ']'),
+                nextPage,
+                orderList = [];
+
+            image.addClass('mywidget_img');
+            orderList.push(image._nodes);
+
+            for (var idx = 1; idx <= MyWidget.NMB_PAGES; idx++) {
+                if (currentPage - idx >= 0 && currentPage != currentPage - idx) {
+                    nextPage = currentPage - idx;
+                    image = Y.all('img[relativeTo=pg_' + nextPage + ']');
+                    if (image != null) { orderList.push(image._nodes); image.addClass('mywidget_img'); }
+                    //leftpage
+                }
+
+                if (currentPage + idx <= MyWidget.NMB_PAGES && currentPage != currentPage + idx) {
+                    nextPage = currentPage + idx;
+                    image = Y.all('img[relativeTo=pg_' + nextPage + ']');
+                    if (image != null) { orderList.push(image._nodes); image.addClass('mywidget_img'); }
+                    //rightpage
+                }
+            }
+
+            this._setPosition();
+            loadImage(orderList);
+        },
+        _renderTemplate: function() {
+            var contentBox = this.get("contentBox"),
+                template = this.get("template");
+
+            contentBox.addClass('mywidget_container');
+            contentBox.setStyle('height', '712px');
+
+            for(var i in template) {
+                var cnt = Y.Node.create(template[i].content);
+                cnt.addClass('mywidget_children');
+                Y.one(contentBox).appendChild(cnt);
+            }
+        },
+        _renderButtons : function() {
+            var contentBox = this.get("boundingBox"),
+                strings = this.get("strings"),
+                prev = this._createButton(strings.prev, 'mywidget_bttn_prev'),
+                next = this._createButton(strings.next, 'mywidget_bttn_next');
+
+            this.previusImage = contentBox.append(prev);
+            this.nextImage = contentBox.append(next);
+        },
+        _createButton : function(text, className) {
+
+            var btn = Y.Node.create(MyWidget.BTN_TEMPLATE);
+            btn.set("innerHTML", text);
+            btn.set("title", text);
+            btn.addClass(className);
+
+            return btn;
+        },
+        _onMouseDown : function(e) {
+            var node = e.target,
+                width = this.get('contentBox')._node.offsetWidth,
+                images = Y.all('.mywidget_children');
+
+            if (node.hasClass("mywidget_bttn_next")) {
+                currVal = MyWidget.CurrentStep;
+                currVal++;
+                if(currVal > MyWidget.NMB_PAGES) currVal = 0;
+                MyWidget.CurrentStep = currVal;
+                transit(images, width, currVal, this.get('sliderSpeed'));
+            } else if (node.hasClass("mywidget_bttn_prev")) {
+                currVal = MyWidget.CurrentStep;
+                currVal--;
+                if(currVal < 0) currVal = MyWidget.NMB_PAGES;
+                MyWidget.CurrentStep = currVal;
+                transit(images, width, currVal, this.get('sliderSpeed'));
+            }
+        },
+        _onDirectionKey : function(e) {
+
+            e.preventDefault();
+
+            switch (e.charCode) {
+                case 39:
+                    this._setPosition('next');
+                    break;
+                case 37:
+                    this._setPosition('prev');
+                    break;
+            }
+        },
+        _setPosition : function(type) {
+            var width = this.get('contentBox')._node.offsetWidth,
+                images = Y.all('.mywidget_children'),
+                duration = this.get('sliderSpeed');
+
+            switch (type) {
+                case "next":
+                    currVal = MyWidget.CurrentStep;
+                    currVal++;
+                    if(currVal > MyWidget.NMB_PAGES) currVal = 0;
+                    MyWidget.CurrentStep = currVal;
+                    break;
+                case "prev":
+                    currVal = MyWidget.CurrentStep;
+                    currVal--;
+                    if(currVal < 0) currVal = MyWidget.NMB_PAGES;
+                    MyWidget.CurrentStep = currVal;
+                    break;
+                default :
+                    currVal = MyWidget.LOCATION;
+                    MyWidget.CurrentStep = currVal;
+                    duration = 0;
+                    break;
+            }
+
+            transit(images, width, currVal, duration);
+        }
+    });
+
+    function transit (images, width, currVal, speed) {
+        YUI().use('transition', function (Y) {
+            images.transition({
+                easing: 'linear',
+                left: '-' + width * currVal + 'px',
+                duration: speed
+            }, function() {
+                window.location.hash = MyWidget.NAME_PAGES[currVal]
+            });
+        });
+    };
+
+    Y.namespace('MyWidgets').MakeGood = function (config) {
+        return new MyWidget(config);
+    };
+
+}, "0.1", {requires: ['event-key','widget', 'transition']});
