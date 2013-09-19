@@ -2,8 +2,7 @@
 <html>
 <head>
     <script src="http://yui.yahooapis.com/3.12.0/build/yui/yui.js"></script>
-    <link href="Template.css" rel="stylesheet">
-    <script src="Template.js"></script>
+    <script src="myslider.js"></script>
     <script>
         var PAGES = {
             firstPage: {
@@ -32,21 +31,17 @@
             filter: 'raw',
             modules: {
                 'mywidget': {
-                    fullpath: 'Template.js',
-                    requires: ['event-key','widget']
+                    fullpath: 'myslider.js',
+                    requires: ['view', 'model', 'model-list', 'event', 'event-key', 'router', 'app']
                 }
             }
-        }).use('mywidget', function(Y) {
-            var mywidget = Y.MyWidgets.MakeGood({
-                template: PAGES,
-                sliderSpeed: 0.5
-            });
-            mywidget.render("#demo");
+        }).use('myslider', function (Y) {
+            var mySlider = new Y.MySlider.Start({content: PAGES});
         });
     </script>
     <title></title>
 </head>
-<body class="yui3-skin-sam">
-    <div id="demo"></div>
+<body>
+
 </body>
 </html>
