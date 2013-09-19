@@ -34,7 +34,7 @@ YUI.add('myslider', function (Y) {
         });
 
         Y.SliderView = Y.Base.create('sliderView', Y.View, [], {
-            events: { '#demo' : {click: function() {alert('fire!')} }},
+            events: { '#demo' : {click: function() {app.navigate('/next'); app.render()} }},
             template: '<div>{content}</div><button id="demo">TEST</button>',
             initializer: function () {
                 var model = this.get('model');
@@ -51,17 +51,6 @@ YUI.add('myslider', function (Y) {
                     Y.one('body').append(container);
                 }
                 return this;
-
-                /**var model = this.get('model'),
-                    data = { content: this.get('model').toJSON().content },
-                    content = Y.Lang.sub(this.template, data),
-                    container = this.get('container');
-
-                container.setHTML(content);
-                if (! container.inDoc()) {
-                    Y.one('body').append(container);
-                }
-                return this;*/
             }
         }, {
             ATTRS: {
@@ -91,15 +80,15 @@ YUI.add('myslider', function (Y) {
             }, {
                 path: '/:pageName',
                 callback: function () {
-                    var pageModel = mySliderModelList.getPage('Pagetitle2');
+                    var pageModel = mySliderList.getPage('Pagetitle2');
                     this.showView('slider', { model: pageModel });
                 }
             }]
         });
 
         app.navigate('/');
-
-    }
+	  app.render();
+    };
 
     Y.namespace('MySlider').Start = function (config) {
         return new mySlider(config);
