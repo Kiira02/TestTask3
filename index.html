@@ -3,26 +3,62 @@
 <head>
     <script src="http://yui.yahooapis.com/3.12.0/build/yui/yui.js"></script>
     <script src="myslider.js"></script>
+    <style>
+        .slideTMPL {overflow: hidden; max-height: 600px;}
+    </style>
+    <script type="text/x-template" id="templateForSlider">
+        <label>{title}</label>
+        <div class="slideTMPL">{content}</div>
+        <div class="buttonTMPL">{buttons}</div>
+    </script>
     <script>
         var PAGES = {
             firstPage: {
-                title: 'Pagetitle',
-                content: '<div><div><img src="http://www.motto.net.ua/old_site//img/summer/1312791996_EFF0E8F0EEE4E020E1EBE0E3EEF2E2EEF0E8F2.jpg"/><div/></div>'
+                title: 'Summer picture!',
+                content: '<div class="be">' +
+                            '<div class="te">' +
+                                '<img src="http://www.motto.net.ua/old_site//img/summer/1312791996_EFF0E8F0EEE4E020E1EBE0E3EEF2E2EEF0E8F2.jpg"/>' +
+                            '</div>' +
+                         '</div>'
             },
             secondPage: {
-                title: 'Pagetitle2',
-                content: '<table><tr><td><img src="http://apod.nasa.gov/apod/image/9905/ngc4603_hst.jpg"/></div></td><td><img src="http://apod.nasa.gov/apod/image/9907/jupiter_vg1.jpg"/></td></tr><tr><td><img src="http://apod.nasa.gov/apod/image/9906/trifidjet_hst.jpg"></td><td>Test</td></tr></table>'
+                title: 'Space pictures!',
+                content: '<table>' +
+                            '<tr>' +
+                                '<td>' +
+                                    '<img src="http://apod.nasa.gov/apod/image/9905/ngc4603_hst.jpg"/>' +
+                                '</td>' +
+                                '<td>' +
+                                    '<img src="http://apod.nasa.gov/apod/image/9907/jupiter_vg1.jpg"/>' +
+                                '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                                '<td>' +
+                                    '<img src="http://apod.nasa.gov/apod/image/9906/trifidjet_hst.jpg">' +
+                                '</td>' +
+                                '<td>Test</td>' +
+                            '</tr>' +
+                        '</table>'
             },
             thirdPage: {
-                title: 'Pagetitle3',
-                content: '<div><div><img src="http://stat17.privet.ru/lr/09217069c5fd46a9c16c0b7aa5a20675"/><img src="http://download-multimedia.com/images/wallpaper/medium/1/priroda_1280x1024_232_download-multimedia.com.jpg"/></div></div>'
+                title: '"The Great nature" picture',
+                content: '<div>' +
+                            '<div>' +
+                                '<img src="http://stat17.privet.ru/lr/09217069c5fd46a9c16c0b7aa5a20675"/>' +
+                                '<img src="http://download-multimedia.com/images/wallpaper/medium/1/priroda_1280x1024_232_download-multimedia.com.jpg"/>' +
+                            '</div>' +
+                        '</div>'
             },
             fourPage: {
-                title: 'Pagetitle4',
-                content: '<div><div><img src="http://www.bestwall.com.ua/data/media/3/priroda_bwua_24.06.2012_046__1802x1207.jpg"/></div></div>'
+                title: 'Picture of nature!',
+                content: '<div>' +
+                            '<div>' +
+                                '<img src="http://www.bestwall.com.ua/data/media/3/priroda_bwua_24.06.2012_046__1802x1207.jpg"/>' +
+                            '</div>' +
+                        '</div>'
             },
             fivePage: {
-                title: 'Pagetitle5',
+                title: 'Beach',
                 content: '<img src="http://vmonitor.ru/pic/nature/17412/Priroda-1920x1200.jpg"/>'
             }
         };
@@ -36,7 +72,7 @@
                 }
             }
         }).use('myslider', function (Y) {
-            var mySlider = new Y.MySlider.Start({content: PAGES});
+           var slider = new Y.MySlider.Start({content: PAGES});
         });
     </script>
     <title></title>
