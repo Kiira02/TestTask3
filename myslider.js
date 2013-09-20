@@ -77,11 +77,7 @@ YUI.add('myslider', function (Y) {
             views: {
                 slider: {
                     type: 'SliderView'
-                },
-		    slider2: {
-			    type: 'SlideView',
-			    parent: 'SliderView'
-		    }
+                }
             },
             routes: [{
                 path: '/',
