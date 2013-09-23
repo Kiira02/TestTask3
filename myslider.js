@@ -5,16 +5,11 @@ YUI.add('myslider', function (Y) {
 		    object = config['content'],
             currentPage = 0;
 
-        Y.SliderModel = Y.Base.create('sliderModel', Y.Model, [], {
-		nextPage: function () {
-			app.navigate('/:next');
-		}
-        }, {
+        Y.SliderModel = Y.Base.create('sliderModel', Y.Model, [], {}, {
             ATTRS: {
                 title: { value: '' },
                 content: { value: '' },
-		    button: { value: '<button class="prev">PREV</button><button class="next">NEXT</button>'},
-		    name: { value: ''}
+		        name: { value: ''}
             }
         });
 
@@ -28,43 +23,73 @@ YUI.add('myslider', function (Y) {
                 return numPages;
             },
             getPage: function (page) {
-                    return this._items[page];
+                return this._items[page];
+            },
+            checkPages: function (name, number) {
+                var model = this._items[number],
+                    modelList = this._items;
+                if(model.get('name') != name) {
+                    for(var i in modelList) {
+                        if(modelList[i].get('name') == name) {
+                            return modelList[i];
+                        }
+                    }
+                }
+                return model;
             }
         });
 
         Y.SliderView = Y.Base.create('sliderView', Y.View, [], {
             events: {
-		    '.next' : { click: 'nextPage' },
-		    '.prev' : { click: 'prevPage'}
-		},
-		template: Y.one('#templateForSlider').getHTML(),
+                '.next' : { click: 'nextPage' },
+                '.prev' : { click: 'prevPage'}
+            },
+		    template: Y.one('#templateForSlider').getHTML(),
             initializer: function () {
                 var model = this.get('model');
-                	  model.after('change', this.render, this);
-               	  model.after('destroy', this.render, this);
+                    model.after('change', this.render, this);
+               	    model.after('destroy', this.render, this);
             },
             render: function () {
-			var container = this.get('container'),
-			    model = this.get('model'),
-			    data = {content: this.get('model').toJSON().content, buttons: this.get('model').toJSON().button, title: this.get('model').toJSON().title},
-			    contData = Y.Lang.sub(this.template, data);
+                var container = this.get('container'),
+                    model = this.get('model'),
+                    //view = new Y.SlideView({model: model}),
+                    data = {content: this.get('model').toJSON().content /**view.render().get('container')*/, title: this.get('model').toJSON().title},
+                    contData = Y.Lang.sub(this.template, data);
+                    //height = window.innerHeight;
 
-		    	container.setHTML(contData);
-		    	Y.one('body').appendChild(container);
+                container.setHTML(contData);
+                Y.one('body').appendChild(container);
+                //Y.all('.slideTMPL').setStyle('height', height - 62 + 'px');
             },
-		nextPage: function () {
-            var numPages = mySliderList.getTotalPages() - 1;
-            currentPage++;
-            if(currentPage > numPages) currentPage = 0;
-            app.navigate('/' + mySliderList._items[currentPage].get('name'));
-		},
-		prevPage: function () {
-            var numPages = mySliderList.getTotalPages() - 1;
-            currentPage--;
-            if(currentPage < 0) currentPage = numPages;
-			app.navigate('/' + mySliderList._items[currentPage].get('name'));
-		}
+            nextPage: function () {
+                var numPages = mySliderList.getTotalPages() - 1;
+                currentPage++;
+                if(currentPage > numPages) currentPage = 0;
+                app.navigate('/' + mySliderList._items[currentPage].get('name'));
+            },
+            prevPage: function () {
+                var numPages = mySliderList.getTotalPages() - 1;
+                currentPage--;
+                if(currentPage < 0) currentPage = numPages;
+                app.navigate('/' + mySliderList._items[currentPage].get('name'));
+            }
         });
+
+        /**Y.SlideView = Y.Base.create('slideView', Y.View, [], {
+            initializer: function () {
+                var model = this.get('model');
+                    model.after('change', this.render, this);
+                    model.after('destroy', this.render, this);
+            },
+            render: function () {
+                var container = this.get('container'),
+                    model = this.get('model').toJSON().content;
+
+                container.setHTML(model);
+                return this;
+            }
+        });*/
 
         mySliderList = new Y.SliderList();
         for (var i in object) {
@@ -72,12 +97,16 @@ YUI.add('myslider', function (Y) {
         }
 
         app = new Y.App({
-            transitions: true,
+            transitions: false,
             viewConteiner: '#content',
             views: {
                 slider: {
                     type: 'SliderView'
                 }
+                /**slide : {
+                    type: 'SlideView',
+                    parent: 'SliderView'
+                }*/
             },
             routes: [{
                 path: '/',
@@ -88,7 +117,7 @@ YUI.add('myslider', function (Y) {
             }, {
                 path: '/:pageName',
                 callback: function (req) {
-                    var pageModel = mySliderList.getPage(currentPage);
+                    var pageModel = mySliderList.checkPages(req.params.pageName, currentPage);
                     this.showView('slider', { model: pageModel });
                 }
             }]
@@ -96,6 +125,20 @@ YUI.add('myslider', function (Y) {
 
         app.navigate('/');
 	    app.render();
+
+        Y.on('keydown', function (e) {
+            var numPages = mySliderList.getTotalPages() - 1;
+            if(e.keyCode == 37) {
+                currentPage--;
+                if(currentPage < 0) currentPage = numPages;
+                app.navigate('/' + mySliderList._items[currentPage].get('name'));
+            }
+            if(e.keyCode == 39) {
+                currentPage++;
+                if(currentPage > numPages) currentPage = 0;
+                app.navigate('/' + mySliderList._items[currentPage].get('name'));
+            }
+        }, window);
     };
 
     Y.namespace('MySlider').Start = function (config) {

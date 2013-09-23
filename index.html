@@ -4,12 +4,16 @@
     <script src="http://yui.yahooapis.com/3.12.0/build/yui/yui.js"></script>
     <script src="myslider.js"></script>
     <style>
-        .slideTMPL {overflow: hidden; max-height: 600px;}
+        .slideTMPL {overflow: hidden; height: 500px;}
+        .prev {cursor: pointer}
+        .next {cursor: pointer}
     </style>
     <script type="text/x-template" id="templateForSlider">
         <label>{title}</label>
         <div class="slideTMPL">{content}</div>
-        <div class="buttonTMPL">{buttons}</div>
+        <div class="buttonTMPL">
+            <button class="prev">PREV</button><button class="next">NEXT</button>
+        </div>
     </script>
     <script>
         var PAGES = {
@@ -72,7 +76,7 @@
                 }
             }
         }).use('myslider', function (Y) {
-           var slider = new Y.MySlider.Start({content: PAGES});
+            var slider = new Y.MySlider.Start({content: PAGES});
         });
     </script>
     <title></title>
