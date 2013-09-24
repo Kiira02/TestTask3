@@ -15,19 +15,9 @@ YUI.add('myslider', function (Y) {
 
         Y.SliderList = Y.Base.create('sliderList', Y.ModelList, [], {
             model: Y.SliderModel,
-            getTotalPages: function () {
-                var numPages = 0;
-                this.each(function (item) {
-                    numPages++
-                });
-                return numPages;
-            },
-            getPage: function (page) {
-                return this._items[page];
-            },
             checkPages: function (name, number) {
-                var model = this._items[number],
-                    modelList = this._items;
+                var model = this.item(number),
+                    modelList = this.toArray();
                 if(model.get('name') != name) {
                     for(var i in modelList) {
                         if(modelList[i].get('name') == name) {
@@ -63,16 +53,16 @@ YUI.add('myslider', function (Y) {
                 //Y.all('.slideTMPL').setStyle('height', height - 62 + 'px');
             },
             nextPage: function () {
-                var numPages = mySliderList.getTotalPages() - 1;
+                var numPages = mySliderList.size() - 1;
                 currentPage++;
                 if(currentPage > numPages) currentPage = 0;
-                app.navigate('/' + mySliderList._items[currentPage].get('name'));
+                app.navigate('/' + mySliderList.item(currentPage).get('name'));
             },
             prevPage: function () {
-                var numPages = mySliderList.getTotalPages() - 1;
+                var numPages = mySliderList.size() - 1;
                 currentPage--;
                 if(currentPage < 0) currentPage = numPages;
-                app.navigate('/' + mySliderList._items[currentPage].get('name'));
+                app.navigate('/' + mySliderList.item(currentPage).get('name'));
             }
         });
 
@@ -111,7 +101,7 @@ YUI.add('myslider', function (Y) {
             routes: [{
                 path: '/',
                 callback: function () {
-                    var pageModel = mySliderList.getPage(currentPage);
+                    var pageModel = mySliderList.item(currentPage);
                     this.showView('slider', { model: pageModel });
                 }
             }, {
@@ -127,16 +117,16 @@ YUI.add('myslider', function (Y) {
 	    app.render();
 
         Y.on('keydown', function (e) {
-            var numPages = mySliderList.getTotalPages() - 1;
+            var numPages = mySliderList.size() - 1;
             if(e.keyCode == 37) {
                 currentPage--;
                 if(currentPage < 0) currentPage = numPages;
-                app.navigate('/' + mySliderList._items[currentPage].get('name'));
+                app.navigate('/' + mySliderList.item(currentPage).get('name'));
             }
             if(e.keyCode == 39) {
                 currentPage++;
                 if(currentPage > numPages) currentPage = 0;
-                app.navigate('/' + mySliderList._items[currentPage].get('name'));
+                app.navigate('/' + mySliderList.item(currentPage).get('name'));
             }
         }, window);
     };
